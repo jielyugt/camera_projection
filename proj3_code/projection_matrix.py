@@ -50,7 +50,26 @@ def projection(P: np.ndarray, points_3d: np.ndarray) -> np.ndarray:
     
     ##############################
     # TODO: Student code goes here
-    raise NotImplementedError
+    # raise NotImplementedError
+
+    n,d = points_3d.shape
+
+    # append 1 to points_3d if it is n * 3
+    if d == 3:
+        ones = np.asarray([1] * n).reshape(n,1)
+        points_3d = np.hstack((points_3d, ones))
+
+    p1 = P[0]
+    p2 = P[1]
+    p3 = P[2]
+
+    points_trans = np.transpose(points_3d)
+
+    x = np.dot(p1, points_trans) / np.dot(p3, points_trans)
+    y = np.dot(p2, points_trans) / np.dot(p3, points_trans)
+
+    return np.transpose(np.asarray([x, y]))
+
     ##############################
     
     return projected_points_2d
