@@ -29,7 +29,21 @@ def objective_func(x, **kwargs):
     
     ##############################
     # TODO: Student code goes here
-    raise NotImplementedError
+    # raise NotImplementedError
+
+    # extract the 2d and 3d points from the dictionary
+    points_2d = np.asarray(list(kwargs.values())[0])
+    points_3d = np.asarray(list(kwargs.values())[1])
+
+    # fix P_34=1
+    x = np.concatenate((x,[1]),axis = 0).reshape(3,4)
+
+    # calculate the project using x
+    projected_points_2d = projection(x, points_3d)
+
+    # calculate the error    
+    diff = projected_points_2d.flatten(order='F') - points_2d.flatten(order='F')
+
     ##############################
       
     return diff
