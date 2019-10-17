@@ -126,7 +126,18 @@ def estimate_camera_matrix(pts2d: np.ndarray,
      
     ##############################
     # TODO: Student code goes here
-    raise NotImplementedError
+    # raise NotImplementedError
+
+    # dropping P_34 in initial_guess
+    fixed_initial_guess = initial_guess.flatten()[:11]
+
+    # estimation
+    result = least_squares(objective_func, fixed_initial_guess, kwargs={'pts2d':pts2d,'pts3d':pts3d}, \
+                            method='lm', verbose=2, max_nfev=50000, ftol=1e-08, xtol=1e-08, gtol=1e-08)
+
+    # fixing for output
+    M = np.concatenate((result.x,[1]),axis = 0).reshape(3,4)
+
     ##############################
     
     print("Time since optimization start", time.time() - start_time)
