@@ -20,7 +20,10 @@ def calculate_num_ransac_iterations(prob_success, sample_size, ind_prob_correct)
     """
     ##############################
     # TODO: Student code goes here
-    raise NotImplementedError
+    # raise NotImplementedError
+
+    num_samples = math.log(1-prob_success) / math.log(1 - ind_prob_correct**sample_size)
+
     ##############################
 
     return int(num_samples)
