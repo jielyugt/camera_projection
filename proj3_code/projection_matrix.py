@@ -186,7 +186,14 @@ def calculate_camera_center(P: np.ndarray,
 
     ##############################
     # TODO: Student code goes here
-    raise NotImplementedError
+    # raise NotImplementedError
+
+    # R_T (cRw) is the transpose of R (wRc)
+
+    cRw_inverse = np.linalg.inv(R_T)
+    K_inverse = np.linalg.inv(K)    
+    cc = -np.matmul(np.matmul(cRw_inverse, K_inverse), P[:,3])
+
     ##############################
 
     return cc
