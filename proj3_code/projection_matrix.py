@@ -161,7 +161,11 @@ def decompose_camera_matrix(P: np.ndarray) -> (np.ndarray, np.ndarray):
     
     ##############################
     # TODO: Student code goes here
-    raise NotImplementedError
+    # raise NotImplementedError
+    
+    M = P[:,:3]
+    K,R = rq(M)
+
     ##############################
     
     return K, R
