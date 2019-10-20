@@ -35,7 +35,10 @@ def optimize(p0, x_0s, x_1s):
     
     ##############################
     # TODO: Student code goes here
-    raise NotImplementedError
+    # raise NotImplementedError
+
+    result = least_squares(fun=objective_function, x0=p0, method='lm', jac='2-point', args=(x_0s, x_1s))
+
     ##############################
 
     optimized_F = result.x
@@ -48,4 +51,3 @@ def solve_F(x_0s, x_1s):
     result = optimize(p0, x_0s, x_1s)
     F = np.reshape(result, (3, 3))
     return F
-
