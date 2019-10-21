@@ -2,11 +2,21 @@
 
 1. What would happen to the projected points if you increased/decreased the x coordinate, or the other coordinates of the camera center t? Write down a description of your expectations in the appropriate part of your writeup submission.
 
+- Camera center t acts as a translation in P = K[R|t]. 
+- Increasing or decreasing a coordinate in t will result in a translation in the projection in the 3D world along the changed axises.
+
 2. Perform this shift for each of the camera coordinates and then recompose the projection matrix and visualize the result in your Jupyter notebook. Was the visualized result what you expected?
+
+- The experiments are shown below and they are expected. 
+- For example, if we increase the x coordinate by 1, the projected point shifts along the x axis towards the camera origin. 
+- I think it moves towards the camera origin becasue by adding a positive number to the camera origin coordinate, 
+we are moving the camera forward, thus the object will be closer in relation.
 
 ###### Part 2: Fundamental Matrix Estimation
 
 1. Why is it that when you take your own images, you can’t just rotate the camera or zoom the image for your two images of the same scene?
+
+Zooming or rotating will result in two iamges with the same camera center. The two images will have the same projection, and as a result we only get one perspective which is not enough.
 
 2. Why is it that points in one image are projected by the fundamental matrix onto epipolar lines in the other image?
 
