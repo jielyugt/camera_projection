@@ -54,7 +54,20 @@ def find_inliers(x_0s, F, x_1s, threshold):
     """
     ##############################
     # TODO: Student code goes here
-    raise NotImplementedError
+    # raise NotImplementedError
+
+    inliers_raw = []
+
+    # errors is a 1d array with alternating d(Fx_1,x_0) and d(FTx_0,x_1)
+    errors = fundamental_matrix.signed_point_line_errors(x_0s, F, x_1s)
+
+    for i in range(0,len(errors),2):
+        error = errors[i] + errors[i+1]
+        if abs(errors[i]) <= threshold and abs(errors[i+1]) <= threshold:
+            inliers_raw.append(i // 2)
+    
+    inliers = np.asarray(inliers_raw)
+
     ##############################
 
     return inliers
@@ -105,7 +118,35 @@ def ransac_fundamental_matrix(x_0s, x_1s):
     """
     ##############################
     # TODO: Student code goes here
-    raise NotImplementedError
+    # raise NotImplementedError
+
+    # make coordinates homogeneous
+    x_0s_3d, x_1s_3d = two_view_data.preprocess_data(x_0s, x_1s)
+
+    # solve_F(x_0s, x_1s) takes in two lists of paired homogenuous coordinates and returns an estimated fundamental matrix
+    prob_success = 0.999              # pick one yourself
+    sample_size = 9                   # ?
+    ind_prob_correct = 0.9            # get this for SIFT
+    num_samples = calculate_num_ransac_iterations(prob_success, sample_size, ind_prob_correct)
+    print('\n\n{}\n\n'.format(num_samples))
+
+    best_F = None
+    best_F_inliers_num = -1
+    inliers_x_0 = None
+    inliers_x_1 = None
+
+    indices = np.arange(len(x_0s))
+    for each in range(num_samples):
+        sample = np.random.choice(indices, sample_size, replace = False)
+        F_candidate = solve_F(x_0s[sample], x_1s[sample])
+        inliers_indices = find_inliers(x_0s_3d, F_candidate, x_1s_3d, 1)
+        num_inliers = len(inliers_indices)
+        if num_inliers > best_F_inliers_num:
+            best_F_inliers_num = num_inliers
+            best_F = F_candidate
+            inliers_x_0 = x_0s[inliers_indices]
+            inliers_x_1 = x_1s[inliers_indices]    
+
     ##############################
 
     return best_F, inliers_x_0, inliers_x_1
