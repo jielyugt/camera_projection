@@ -3,3 +3,8 @@
 proj3_code/__pycache__/
 proj3_code/feature_matching/__pycache__/
 unit_tests/__pycache__/
+
+.ipynb_checkpoints
+data/pts2d_image1.npy
+data/pts2d_image2.npy
+data/pts3d_fiducial.npy
