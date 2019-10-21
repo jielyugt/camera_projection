@@ -1,0 +1,29 @@
+###### Part 1: Camera Projection Matrix Estimation
+
+1. What would happen to the projected points if you increased/decreased the x coordinate, or the other coordinates of the camera center t? Write down a description of your expectations in the appropriate part of your writeup submission.
+
+2. Perform this shift for each of the camera coordinates and then recompose the projection matrix and visualize the result in your Jupyter notebook. Was the visualized result what you expected?
+
+###### Part 2: Fundamental Matrix Estimation
+
+1. Why is it that when you take your own images, you can’t just rotate the camera or zoom the image for your two images of the same scene?
+
+2. Why is it that points in one image are projected by the fundamental matrix onto epipolar lines in the other image?
+
+3. What happens to the epipoles and epipolar lines when you take two images where the camera centers are within the images? Why?
+
+4. What does it mean when your epipolar lines are all horizontal across the two images?
+
+5. Why is the fundamental matrix defined up to a scale?
+
+6. Why is the fundamental matrix rank 2?
+
+###### Part 3: RANSAC
+
+1. How many RANSAC iterations would we need to find the fundamental matrix with 99.9% certainty from your Mount Rushmore and Notre Dame SIFTNet results assuming that they had a 90% point correspondence accuracy?
+
+2. One might imagine that if we had more than 9 point correspondences, it would be better to use more of them to solve for the fundamental matrix. Investigate this by finding the number of RANSAC iterations you would need to run with 18 points.
+
+3. If our dataset had a lower point correspondence accuracy, say 70%, what is the minimum number of iterations needed to find the fundamental matrix with 99.9% certainty?
+
+###### Extra Points
