@@ -180,8 +180,11 @@ def test_with_epipolar_lines():
     import matplotlib.pyplot as plt
 
     # Rushmore
-    image1 = load_image('../data/ransac_1.jpg')
-    image2 = load_image('../data/ransac_2.jpg')
+    # image1 = load_image('../data/ransac_1.jpg')
+    # image2 = load_image('../data/ransac_2.jpg')
+
+    image1 = load_image('../data/ransac_3.jpg')
+    image2 = load_image('../data/ransac_4.jpg')
 
     scale_factor = 0.5
     image1 = PIL_resize(image1, (int(image1.shape[1]*scale_factor), int(image1.shape[0]*scale_factor)))
