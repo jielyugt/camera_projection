@@ -170,5 +170,75 @@ def test_with_epipolar_lines():
     """
     ##############################
     # TODO: Student code goes here
-    raise NotImplementedError
+    # raise NotImplementedError
+
+    from feature_matching.SIFTNet import get_siftnet_features
+    from feature_matching.utils import load_image, PIL_resize, rgb2gray
+    import torch
+    import torchvision
+    import torchvision.transforms as transforms
+    import matplotlib.pyplot as plt
+
+    # Rushmore
+    image1 = load_image('../data/ransac_1.jpg')
+    image2 = load_image('../data/ransac_2.jpg')
+
+    scale_factor = 0.5
+    image1 = PIL_resize(image1, (int(image1.shape[1]*scale_factor), int(image1.shape[0]*scale_factor)))
+    image2 = PIL_resize(image2, (int(image2.shape[1]*scale_factor), int(image2.shape[0]*scale_factor)))
+    image1_bw = rgb2gray(image1)
+    image2_bw = rgb2gray(image2)
+
+    #convert images to tensor
+    tensor_type = torch.FloatTensor
+    torch.set_default_tensor_type(tensor_type)
+    to_tensor = transforms.ToTensor()
+    image_input1 = to_tensor(image1_bw).unsqueeze(0)
+    image_input2 = to_tensor(image2_bw).unsqueeze(0)
+
+    from feature_matching.HarrisNet import get_interest_points
+    from feature_matching.utils import show_interest_points
+    x1, y1, _ = get_interest_points(image_input1.float())
+    x2, y2, _ = get_interest_points(image_input2.float())
+
+    x1, x2 = x1.detach().numpy(), x2.detach().numpy()
+    y1, y2 = y1.detach().numpy(), y2.detach().numpy()
+    print('{:d} corners in image 1, {:d} corners in image 2'.format(len(x1), len(x2)))
+    image1_features = get_siftnet_features(image_input1, x1, y1)
+    image2_features = get_siftnet_features(image_input2, x2, y2)
+
+    from feature_matching.student_feature_matching import match_features
+    matches, confidences = match_features(image1_features, image2_features, x1, y1, x2, y2)
+    print('{:d} matches from {:d} corners'.format(len(matches), len(x1)))
+
+    from feature_matching.utils import show_correspondence_circles, show_correspondence_lines
+    # num_pts_to_visualize = len(matches)
+    num_pts_to_visualize = 100
+    c2 = show_correspondence_lines(image1, image2,
+                        x1[matches[:num_pts_to_visualize, 0]], y1[matches[:num_pts_to_visualize, 0]],
+                        x2[matches[:num_pts_to_visualize, 1]], y2[matches[:num_pts_to_visualize, 1]])
+    plt.figure(); plt.title('Proposed Matches'); plt.imshow(c2)
+
+    from proj3_code.ransac import ransac_fundamental_matrix
+    # print(image1_features.shape, image2_features.shape)
+    num_features = min([len(image1_features), len(image2_features)])
+    x0s = np.zeros((len(matches), 2))
+    x1s = np.zeros((len(matches), 2))
+    x0s[:,0] = x1[matches[:, 0]]
+    x0s[:,1] = y1[matches[:, 0]]
+    x1s[:,0] = x2[matches[:, 1]]
+    x1s[:,1] = y2[matches[:, 1]]
+    # print(image1_pts.shape)
+    F, matches_x0, matches_x1 = ransac_fundamental_matrix(x0s, x1s)
+    print(F)
+    # print(matches_x0)
+    # print(matches_x1)
+
+    from proj3_code.utils import draw_epipolar_lines
+    # Draw the epipolar lines on the images and corresponding matches
+    match_image = show_correspondence_lines(image1, image2,
+                                    matches_x0[:num_pts_to_visualize, 0], matches_x0[:num_pts_to_visualize, 1],
+                                    matches_x1[:num_pts_to_visualize, 0], matches_x1[:num_pts_to_visualize, 1])
+    plt.figure(); plt.title('True Matches'); plt.imshow(match_image)
+    draw_epipolar_lines(F, image1, image2, matches_x0, matches_x1)
     ##############################
